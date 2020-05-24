@@ -81,3 +81,8 @@ script:
   - R CMD build . --no-build-vignettes
   - PKG_FILE_NAME=$(ls -1t *.tar.gz | head -n 1)
   - R CMD check "${PKG_FILE_NAME}" --no-manual --as-cran
+
+after_failure:
+  - cat /home/travis/build/WubingZhang/rMAUPS/rMAUPS.Rcheck/00check.log
+
+
