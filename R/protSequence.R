@@ -90,7 +90,8 @@ readPSPUbiquitin <- function(path, minStudies=1) {
 browseProtStructure <- function(protId, start, end,
                                 doBrowse=TRUE,
                                 baseUrl='https://mupit.icm.jhu.edu/MuPIT_Interactive/?gm=',
-                                checkBaseUrl='https://mupit.icm.jhu.edu/MuPIT_Interactive/rest/showstructure/check?pos='){
+                                checkBaseUrl=paste0('https://mupit.icm.jhu.edu/MuPIT_Interactive/rest/',
+                                                    "showstructure/check?pos=")){
 
   stopifnot(length(start)==length(end))
 

@@ -1,11 +1,10 @@
 #' Convert gene level differences to pathway level or complex level differences.
 #'
 #' @docType methods
-#' @name DeComplex
-#' @rdname DeComplex
+#' @name DEComplex
+#' @rdname DEComplex
 #'
-#' @param depres normalized count matrix; rows are all genes in the signature that
-#' shall be summarized into one score; columns are samples
+#' @param depres A data frame, with log2FC and pvalue in the column.
 #' @param type Molecular signatures for testing, available datasets include Pathway
 #' (KEGG, REACTOME, C2_CP), GO (GOBP, GOCC, GOMF), MSIGDB (C1, C2 (C2_CP (C2_CP_PID, C2_CP_BIOCARTA),
 #' C2_CGP), C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK) and Complex (CORUM). Any combination of them
@@ -17,7 +16,7 @@
 #' @author Wubing Zhang
 #' @export
 #'
-DeComplex <- function(depres, type = "GOBP+GOCC+CORUM+REACTOME",
+DEComplex <- function(depres, type = "GOBP+GOCC+CORUM+REACTOME",
                       lfc = "log2FC", pval = "pvalue"){
   ## GOCC, CORUM, Pathway
   gsets = gsGetter(type = type, limit = c(0,200))

@@ -11,8 +11,8 @@ browseProtStructure(
   end,
   doBrowse = TRUE,
   baseUrl = "https://mupit.icm.jhu.edu/MuPIT_Interactive/?gm=",
- 
-    checkBaseUrl = "https://mupit.icm.jhu.edu/MuPIT_Interactive/rest/showstructure/check?pos="
+  checkBaseUrl = paste0("https://mupit.icm.jhu.edu/MuPIT_Interactive/rest/",
+    "showstructure/check?pos=")
 )
 }
 \arguments{
