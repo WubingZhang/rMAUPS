@@ -100,7 +100,7 @@ MAUPSr <- function(metadata, outdir = "./", qc = TRUE,
       res = list()
       res$psm.p = psm.p
       res$dep.p = p1
-      res = c(res, DeComplex(deres_p))
+      res = c(res, DEComplex(deres_p))
       write.csv(res$deComplex, paste0(outdir,"/",comp,"/",prefix, "_dePathway.csv"),
                 row.names = TRUE, quote = FALSE)
       res$gobp.p = res$gobp.p + labs(title = paste0(prefix, "(BP)"))
@@ -159,7 +159,7 @@ MAUPSr <- function(metadata, outdir = "./", qc = TRUE,
 
       res = list()
       res$dep.p = p1
-      res = c(res, DeComplex(mergedDep, lfc = "Zscore"))
+      res = c(res, DEComplex(mergedDep, lfc = "Zscore"))
       res$gobp.p = res$gobp.p + labs(title = paste0(prefix, "(BP)"))
       res$reactome.p = res$reactome.p + labs(title = paste0(prefix, "(REACTOME)"))
       res$gocc.p = res$gocc.p + labs(title = paste0(prefix, "(CC)"))

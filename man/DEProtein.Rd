@@ -24,6 +24,8 @@ DEProtein(
 \item{rData.type}{RNAseq or array.}
 
 \item{toplabels}{Same as that in the ScatterView.}
+
+\item{...}{Other parameters in ScatterView.}
 }
 \value{
 A list including the differential analysis results and a scatter plot

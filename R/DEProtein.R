@@ -9,6 +9,7 @@
 #' @param rData A matrix of gene expression profile.
 #' @param rData.type RNAseq or array.
 #' @param toplabels Same as that in the ScatterView.
+#' @param ... Other parameters in ScatterView.
 #'
 #' @return A list including the differential analysis results and a scatter plot
 #' indicating the adjustment of differential RNA expression from the protein abundance change.

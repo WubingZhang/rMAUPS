@@ -73,7 +73,7 @@ ScatterView(deres, x = "log2FC", y = "logFDR",
             groups = c("bottomleft", "bottomright"), top = 5)
 
 ## ----decomplex-------------------------------------------------------------
-res = DeComplex(deres)
+res = DEComplex(deres)
 head(res$deComplex)
 res$gobp.p
 res$reactome.p

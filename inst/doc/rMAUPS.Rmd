@@ -94,7 +94,7 @@ Input the path to rMAUPS results, e.g.  "analysis/" here, click `submit`, then a
 
 
 # Step-by-step analysis of proteomics
-Besides the quick run of rMAUPS pipeline, you can also perform step-by-step analysis using functions in rMAUPS. You can perform quality control using the function `ProteomicsQC`, normalize the proteomics data using `normalizeProteomics`, impute the missing values using `imputeNA`, perform differetial analysis using `DEAnalyze`, and test the differential abundance of protein complexes or pathways using `DeComplex`.
+Besides the quick run of rMAUPS pipeline, you can also perform step-by-step analysis using functions in rMAUPS. You can perform quality control using the function `ProteomicsQC`, normalize the proteomics data using `normalizeProteomics`, impute the missing values using `imputeNA`, perform differetial analysis using `DEAnalyze`, and test the differential abundance of protein complexes or pathways using `DEComplex`.
 
 ## Example dataset
 To give an example about the quality control and imputation, we randomly assigned 10% values to be NA in the data.
@@ -150,9 +150,9 @@ ScatterView(deres, x = "log2FC", y = "logFDR",
 ```
 
 ## Differential expression of pathways/complexes
-For proteomics data analysis, the protein complex level analysis is informative. So we design a function DeComplex to combine the differential abundance of proteins into differential level of protein complexes or biological pathways.
+For proteomics data analysis, the protein complex level analysis is informative. So we design a function DEComplex to combine the differential abundance of proteins into differential level of protein complexes or biological pathways.
 ```{r decomplex}
-res = DeComplex(deres)
+res = DEComplex(deres)
 head(res$deComplex)
 res$gobp.p
 res$reactome.p
