@@ -58,9 +58,10 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
     ## ID mapping.
     if(all(c(fromType, toType) %in% c("entrez", "symbol", "ensembl"))){
       ann <- getGeneAnn(organism, update=update)$Gene
-      if("symbol" %in% c(fromType, toType)){
+      if("symbol" %in% c(fromType, toType) & any(!genes%in%ann$symbol)){
         ann = rbind(ann, ann)
-        ann$symbol[(nrow(ann)/2+1):nrow(ann)] = ann$synonyms[(nrow(ann)/2+1):nrow(ann)]
+        idx = (nrow(ann)/2+1):nrow(ann)
+        ann$symbol[idx] = ann$synonyms[idx]
       }
       ann = ann[, c(fromType, toType)]
     }else if(all(c(fromType, toType) %in% c("uniprot", "ensembl", "refseq", "symbol"))){
@@ -172,6 +173,7 @@ TransGeneID <- function(genes, fromType="Symbol", toType="Entrez",
 #' @export
 #'
 getGeneAnn <- function(org = "hsa", update = FALSE){
+  options(stringsAsFactors = FALSE)
   #### Read rds file directly ####
   rdsann = file.path(system.file("extdata", package = "rMAUPS"),
                       paste0("GeneID_Annotation_", org, ".rds"))
