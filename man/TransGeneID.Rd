@@ -21,7 +21,7 @@ TransGeneID(
 \item{genes}{A character vector, input genes to be converted.}
 
 \item{fromType}{The input ID type, one of "entrez", "symbol"(default), "hgnc",
-"ensembl", "fullname" and "uniprotswissprot";
+"ensembl", "fullname" and "uniprot";
 you can also input other valid attribute names for biomaRt.
 Look at the code in examples to check valid attributes.}
 
