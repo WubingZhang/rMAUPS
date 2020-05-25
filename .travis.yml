@@ -70,10 +70,11 @@ install:
   - conda install -c conda-forge r-devtools r-biocmanager r-ggpubr r-metap r-data.table r-rcpparmadillo
   - conda install -c anaconda libnetcdf libxml2
   - conda install -c bioconda bioconductor-gsva bioconductor-biocstyle
+  - Rscript -e 'BiocManager::install(c("vctrs", "tibble"))'
   - Rscript -e 'BiocManager::install(c("DESeq2"))'
   - Rscript -e 'BiocManager::install(c("limma"), quiet=T)'
   - Rscript -e 'BiocManager::install(c("impute"), quiet=T)'
-  - Rscript -e 'BiocManager::install(c("tibble", "biomaRt", "msigdbr"), quiet=T)'
+  - Rscript -e 'BiocManager::install(c("biomaRt", "msigdbr"), quiet=T)'
   - Rscript -e 'BiocManager::install(c("msmsTests"))'
 
 # Build and check package
