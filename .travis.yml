@@ -83,6 +83,6 @@ script:
   - R CMD check "${PKG_FILE_NAME}" --no-manual --as-cran
 
 after_failure:
-  - cat /home/travis/build/WubingZhang/rMAUPS/rMAUPS.Rcheck/00check.log
+  - cat /home/travis/build/WubingZhang/rMAUPS/rMAUPS.Rcheck/00install.out
 
 
