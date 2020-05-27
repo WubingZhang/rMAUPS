@@ -11,6 +11,7 @@
 #' @return A data frame, representing the stardardized proteome/phosphoproteome data,
 #' in which the first column is median of PSM across multile parallels (if summary is available).
 #'
+#' @export
 preprocess_cptac <- function(CDAP, biospecimens.csv = "", summary = "",
                              outdir = NULL, prefix = ""){
   options(stringsAsFactors = FALSE)
