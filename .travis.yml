@@ -76,7 +76,7 @@ install:
   - Rscript -e 'BiocManager::install(c("impute"), quiet=T)'
   - Rscript -e 'BiocManager::install(c("biomaRt", "msigdbr"), quiet=T)'
   - Rscript -e 'BiocManager::install(c("msmsTests"))'
-
+  - Rscript -e 'BiocManager::install(c("sva", "e1071"))'
 # Build and check package
 script:
   - R CMD build . --no-build-vignettes
