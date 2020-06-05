@@ -9,16 +9,17 @@
 #' @param rData A matrix of gene expression profile.
 #' @param rData.type RNAseq or array.
 #' @param toplabels Same as that in the ScatterView.
-#' @param ... Other parameters in ScatterView.
 #'
 #' @return A list including the differential analysis results and a scatter plot
 #' indicating the adjustment of differential RNA expression from the protein abundance change.
 #'
 #' @author Wubing Zhang
+#' @import ggplot2
 #' @export
 
-DEProtein <- function(pData, design, rData = NULL, rData.type = "RNAseq",
-                      toplabels = NULL, ...){
+DEProtein <- function(pData, design, rData = NULL,
+                      rData.type = "RNAseq",
+                      toplabels = NULL){
   if(is.null(names(design)) & length(design)==ncol(pData)){
     names(design) = colnames(pData)
   }
@@ -40,7 +41,11 @@ DEProtein <- function(pData, design, rData = NULL, rData.type = "RNAseq",
   colnames(dep) = c("log2FC", "baseMean", "stat", "pvalue", "padj")
 
   # Create result list for return
-  res = list(dep = dep, deg = NULL, p1 = NULL, p2 = NULL)
+  res = list(dep = dep, deg = NULL,
+             protein.vs.rna.p = NULL,
+             adj.vs.orig.p = NULL,
+             dep.p = NULL,
+             adj.dep.p = NULL)
 
   efit = NULL
   if(!is.null(rData)){
@@ -71,6 +76,19 @@ DEProtein <- function(pData, design, rData = NULL, rData.type = "RNAseq",
                               lower.tail = FALSE)
     dep[, "adj.padj"] = p.adjust(dep[, "adj.pvalue"])
     res$dep = dep
+
+    ## Protein VS RNA level statistics
+    intercept = sd(abs(mod$residuals))
+    p = ScatterView(dat, "deg.stat", "dep.stat",
+                    slope = mod$coefficients[2],
+                    intercept = c(-intercept, intercept),
+                    groups = c("top", "bottom"),
+                    display_cut = FALSE, top = 0,
+                    toplabels = toplabels)
+    p = p + labs(x = "RNA wald-statistic", y = "Proteomic t-statistic")
+    res$protein.vs.rna.p = p
+
+    ## Adjusted VS original results
     tmp = rownames(dep)[order(dep$adj.stat)]
     toplabels = c(tmp[c(1:6, length(tmp):(length(tmp)-5))], toplabels)
     intercept = sd(dep$adj.stat - dep$stat)
@@ -78,19 +96,24 @@ DEProtein <- function(pData, design, rData = NULL, rData.type = "RNAseq",
                     x_cut = c(-sd(dep$stat), sd(dep$stat)),
                     y_cut = c(-sd(dep$adj.stat), sd(dep$adj.stat)),
                     groups = c("top", "bottom"), display_cut = FALSE, top = 0,
-                    toplabels = toplabels, ...)
+                    toplabels = toplabels)
     p = p + labs(x = "Proteomic t-statistic", y = "Adjusted proteomic t-statistic")
-    res$p2 = p
+    res$adj.vs.orig.p = p
 
-    intercept = sd(abs(mod$residuals))
-    p = ScatterView(dat, "deg.stat", "dep.stat",
-                    slope = mod$coefficients[2],
-                    intercept = c(-intercept, intercept),
-                    groups = c("top", "bottom"),
-                    display_cut = FALSE, top = 0,
-                    toplabels = toplabels, ...)
-    p = p + labs(x = "RNA wald-statistic", y = "Proteomic t-statistic")
-    res$p1 = p
+    ## Volcano plot
+    dat = dep
+    dat$logP = -log10(dat$pvalue)
+    p = ScatterView(dat, "log2FC", "logP", y_cut = 1, groups = c("top"),
+                    top = 10, ylab = "-log10(p-value)", display_cut = TRUE)
+    p = suppressMessages(p + ggplot2::scale_color_manual(values = c("#f03b20", "gray90")))
+    res$dep.p = p
+
+    dat$logP = -log10(dat$adj.pvalue)
+    p = ScatterView(dat, "log2FC", "logP", y_cut = 1, groups = c("top"),
+                    top = 10, ylab = "-log10(p-value)", display_cut = TRUE)
+    p = suppressMessages(p + ggplot2::scale_color_manual(values = c("#f03b20", "gray90")))
+    res$adj.dep.p = p
+
   }
   return(res)
 }

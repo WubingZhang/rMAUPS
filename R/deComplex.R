@@ -26,35 +26,48 @@ DEComplex <- function(depres, type = "GOBP+GOCC+CORUM+REACTOME",
 
   fisherp = gsScore(depres[,pval, drop=FALSE], gset = genesets, fun = "fisher")
   stoufferZ = gsScore(depres[,lfc, drop=FALSE], gset = genesets, fun = "stouffer")
-  merged_deres = cbind(Zscore = stoufferZ, pvalue = fisherp)
-  merged_deres = as.data.frame(merged_deres, stringsAsFactors = FALSE)
-  colnames(merged_deres) = c("Zscore", "pvalue")
+  Gene = lapply(genesets, function(x){
+    ogene = unique(intersect(x,rownames(depres)))
+    Gene = paste0(ogene, collapse = ",")
+    Count = length(ogene)
+    c(Gene, Count)
+  })
+  Gene = unlist(Gene)
+  merged_deres = data.frame(Gene = Gene[seq(1,length(Gene),2)],
+                            Count = Gene[seq(2,length(Gene),2)],
+                            stringsAsFactors = FALSE)
+  merged_deres$Count = as.integer(merged_deres$Count)
+  merged_deres = cbind.data.frame(merged_deres, Zscore = stoufferZ)
+  merged_deres = cbind.data.frame(merged_deres, pvalue = fisherp)
+  rownames(merged_deres) = names(genesets)
   tmp = gsets[!duplicated(gsets$PathwayID), ]
   rownames(tmp) = tmp$PathwayID
   merged_deres$Description = tmp[rownames(merged_deres), 3]
-  merged_deres = merged_deres[, c(3,1,2)]
+  merged_deres = merged_deres[, c(5,1:4)]
 
   ## Visualize differential expressed complexes and pathways
   merged_deres$logP = -log10(merged_deres$pvalue)
   tmp = merged_deres[grepl("C5_BP", rownames(merged_deres)), ]
   p1 = ScatterView(tmp, x = "Zscore", y = "logP", label = "Description",
                    model = "volcano", auto_cut_x = TRUE, force = 5,
-                   top = 5, main = "GOBP", ylab = "-log10(p.value)")
+                   top = 3, main = "GOBP", ylab = "-log10(p.value)")
   p1 = p1 + theme(legend.position = "none")
   tmp = merged_deres[grepl("REACTOME", rownames(merged_deres)), ]
   p2 = ScatterView(tmp, x = "Zscore", y = "logP", label = "Description",
                    model = "volcano", auto_cut_x = TRUE, force = 5,
-                   top = 5, main = "REACTOME", ylab = "-log10(p.value)")
+                   top = 3, main = "REACTOME", ylab = "-log10(p.value)")
   p2 = p2 + theme(legend.position = "none")
   tmp = merged_deres[grepl("C5_CC", rownames(merged_deres)), ]
+  tmp = tmp[tmp$Count<80,]
   p3 = ScatterView(tmp, x = "Zscore", y = "logP", label = "Description",
                    model = "volcano", auto_cut_x = TRUE, force = 5,
-                   top = 5, main = "GOCC", ylab = "-log10(p.value)")
+                   top = 3, main = "GOCC", ylab = "-log10(p.value)")
   p3 = p3 + theme(legend.position = "none")
   tmp = merged_deres[grepl("CORUM", rownames(merged_deres)), ]
+  tmp = tmp[tmp$Count<50,]
   p4 = ScatterView(tmp, x = "Zscore", y = "logP", label = "Description",
                    model = "volcano", auto_cut_x = TRUE, force = 5,
-                   top = 5, main = "CORUM", ylab = "-log10(p.value)")
+                   top = 3, main = "CORUM", ylab = "-log10(p.value)")
   p4 = p4 + theme(legend.position = "none")
   return(list(gocc.p = p3, corum.p = p4, gobp.p = p1, reactome.p = p2,
               deComplex = merged_deres))

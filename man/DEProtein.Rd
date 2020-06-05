@@ -5,14 +5,7 @@
 \alias{DEProtein}
 \title{Differential protein abundance analysis with adjustment of differential RNA expression.}
 \usage{
-DEProtein(
-  pData,
-  design,
-  rData = NULL,
-  rData.type = "RNAseq",
-  toplabels = NULL,
-  ...
-)
+DEProtein(pData, design, rData = NULL, rData.type = "RNAseq", toplabels = NULL)
 }
 \arguments{
 \item{pData}{A matrix of protein abundance profile.}
@@ -24,8 +17,6 @@ DEProtein(
 \item{rData.type}{RNAseq or array.}
 
 \item{toplabels}{Same as that in the ScatterView.}
-
-\item{...}{Other parameters in ScatterView.}
 }
 \value{
 A list including the differential analysis results and a scatter plot
