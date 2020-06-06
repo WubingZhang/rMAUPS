@@ -83,7 +83,7 @@ DEProtein <- function(pData, design, rData = NULL,
                     slope = mod$coefficients[2],
                     intercept = c(-intercept, intercept),
                     groups = c("top", "bottom"),
-                    display_cut = FALSE, top = 0,
+                    display_cut = FALSE, top = 5,
                     toplabels = toplabels)
     p = p + labs(x = "RNA wald-statistic", y = "Proteomic t-statistic")
     res$protein.vs.rna.p = p
@@ -93,9 +93,8 @@ DEProtein <- function(pData, design, rData = NULL,
     toplabels = c(tmp[c(1:6, length(tmp):(length(tmp)-5))], toplabels)
     intercept = sd(dep$adj.stat - dep$stat)
     p = ScatterView(dep, "stat", "adj.stat",
-                    x_cut = c(-sd(dep$stat), sd(dep$stat)),
                     y_cut = c(-sd(dep$adj.stat), sd(dep$adj.stat)),
-                    groups = c("top", "bottom"), display_cut = FALSE, top = 0,
+                    groups = c("top", "bottom"), display_cut = FALSE, top = 5,
                     toplabels = toplabels)
     p = p + labs(x = "Proteomic t-statistic", y = "Adjusted proteomic t-statistic")
     res$adj.vs.orig.p = p

@@ -28,10 +28,10 @@ ProteomicsQC <- function(data, condition = NULL, proj.name = NA, outdir = NULL){
     p7 = countNA(data) + labs(title = proj.name)
 
     if(!is.null(outdir)){
-      ggsave(paste0(outdir, "/", proj.name, "_density_NA_acrossGene.png"), p4, width = 4, height = 3.5)
-      ggsave(paste0(outdir, "/", proj.name, "_density_detection.png"), p5, width = 4, height = 3.5)
-      ggsave(paste0(outdir, "/", proj.name, "_bar_detection.png"), p6, width = 4, height = 3.5)
-      ggsave(paste0(outdir, "/", proj.name, "_count_NA.png"), p7, width = 4, height = 3.5)
+      ggsave(paste0(outdir, "/", proj.name, "_density_NA_acrossGene.pdf"), p4, width = 4, height = 3.5)
+      ggsave(paste0(outdir, "/", proj.name, "_density_detection.pdf"), p5, width = 4, height = 3.5)
+      ggsave(paste0(outdir, "/", proj.name, "_bar_detection.pdf"), p6, width = 4, height = 3.5)
+      ggsave(paste0(outdir, "/", proj.name, "_count_NA.pdf"), p7, width = 4, height = 3.5)
     }
   }else{
     p4 = p5 = p6 = p7 = NULL
@@ -47,11 +47,11 @@ ProteomicsQC <- function(data, condition = NULL, proj.name = NA, outdir = NULL){
   ## Protein correlation within protein complexes
   p3 = corComplex(data) + labs(title = proj.name)
   if(!is.null(outdir)){
-    ggsave(paste0(outdir, "/", proj.name, "_violin_abundance.png"),
+    ggsave(paste0(outdir, "/", proj.name, "_violin_abundance.pdf"),
            p1, width = 4, height = 3.5)
-    ggsave(paste0(outdir, "/", proj.name, "_pcview_samples.png"),
+    ggsave(paste0(outdir, "/", proj.name, "_pcview_samples.pdf"),
            p2, width = 4, height = 3.5)
-    ggsave(paste0(outdir, "/", proj.name, "_correlation_complexes.png"),
+    ggsave(paste0(outdir, "/", proj.name, "_correlation_complexes.pdf"),
            p3, width = 4, height = 3.5)
   }
   return(list(p1 = p1, p2 = p2, p3 = p3, p4 = p4, p5 = p5, p6 = p6, p7 = p7))
