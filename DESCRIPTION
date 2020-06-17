@@ -13,7 +13,8 @@ Depends: R (>= 3.5), stats, utils
 Imports: DESeq2, limma, msmsTests, MSnbase, msmsEDA, edgeR, impute,
         metap, Biobase, GSVA, matrixStats, ggplot2, ggpubr, msigdbr,
         ggrepel, data.table, shiny, biomaRt, grDevices, dplyr, httr,
-        purrr, stringr, e1071, plyr, sva, tibble
+        purrr, stringr, e1071, plyr, sva, tibble, gtools, verification, 
+        doParallel, foreach, magrittr, parallel
 Suggests: BiocStyle, knitr, rmarkdown
 License: GPL (>=3)
 Encoding: UTF-8

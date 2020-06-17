@@ -48,7 +48,7 @@ gsGetter <- function(gmtpath = NULL, type = "All", limit = c(0, Inf),
     gene2path = data.frame()
     if("KEGG" %in% type){
       gsfile = file.path(system.file("extdata", package = "rMAUPS"),
-                         paste0("kegg.all.entrez.", organism, ".rds"))
+                         paste0("msigdb/kegg.all.entrez.", organism, ".rds"))
       if(!file.exists(gsfile)) retrieve_gs(type = "KEGG", organism=organism)
       tmp = readRDS(gsfile)
       colnames(tmp) = c("ENTREZID", "PathwayID", "PathwayName")
@@ -56,7 +56,7 @@ gsGetter <- function(gmtpath = NULL, type = "All", limit = c(0, Inf),
     }
     if("REACTOME" %in% type){
       gsfile = file.path(system.file("extdata", package = "rMAUPS"),
-                         paste0("reactome.all.entrez.", organism, ".rds"))
+                         paste0("msigdb/reactome.all.entrez.", organism, ".rds"))
       if(!file.exists(gsfile)) retrieve_gs(type = "REACTOME", organism=organism)
       tmp = readRDS(gsfile)
       colnames(tmp) = c("ENTREZID", "PathwayID", "PathwayName")
@@ -64,7 +64,7 @@ gsGetter <- function(gmtpath = NULL, type = "All", limit = c(0, Inf),
     }
     if("CORUM" %in% type){
       gsfile = file.path(system.file("extdata", package = "rMAUPS"),
-                         paste0("corum.all.entrez.", organism, ".rds"))
+                         paste0("msigdb/corum.all.entrez.", organism, ".rds"))
       if(!file.exists(gsfile)) retrieve_gs(type = "CORUM", organism=organism)
       tmp = readRDS(gsfile)
       colnames(tmp) = c("ENTREZID", "PathwayID", "PathwayName")
@@ -130,7 +130,7 @@ retrieve_gs <- function(type = c("KEGG", "REACTOME", "CORUM"), organism = 'hsa')
     rownames(pathways) = pathways$PathwayID
     gene2path$PathwayName = pathways[gene2path$PathwayID, "PathwayName"]
     locfname = file.path(system.file("extdata", package = "rMAUPS"),
-                         paste0("kegg.all.entrez.", organism, ".rds"))
+                         paste0("msigdb/kegg.all.entrez.", organism, ".rds"))
     gene2path$PathwayID = gsub(organism, "KEGG:", gene2path$PathwayID)
     saveRDS(gene2path, locfname)
   }
@@ -138,7 +138,7 @@ retrieve_gs <- function(type = c("KEGG", "REACTOME", "CORUM"), organism = 'hsa')
   if("CORUM" %in% type){ ## Process genesets from CORUM
     message(format(Sys.time(), " Downloading genesets from CORUM ..."))
     base_url = "http://mips.helmholtz-muenchen.de/corum/download/allComplexes.txt.zip"
-    locfname = file.path(system.file("extdata", package = "rMAUPS"), "allComplexes.txt.zip")
+    locfname = file.path(system.file("extdata", package = "rMAUPS"), "msigdb/allComplexes.txt.zip")
     download.file(base_url, locfname, quiet = TRUE)
     corum <- read.table(unz(locfname, "allComplexes.txt"), sep = "\t",
                         header = TRUE, quote = "", stringsAsFactors = FALSE)
@@ -156,7 +156,7 @@ retrieve_gs <- function(type = c("KEGG", "REACTOME", "CORUM"), organism = 'hsa')
     gene2corum$EntrezID = TransGeneID(gene2corum$EntrezID, "Symbol", "Entrez", organism = organism)
     gene2corum = na.omit(gene2corum)
     locfname = file.path(system.file("extdata", package = "rMAUPS"),
-                         paste0("corum.all.entrez.", organism, ".rds"))
+                         paste0("msigdb/corum.all.entrez.", organism, ".rds"))
     saveRDS(gene2corum, locfname)
   }
   if("REACTOME" %in% type){ ## Process genesets from REACTOME
@@ -168,7 +168,7 @@ retrieve_gs <- function(type = c("KEGG", "REACTOME", "CORUM"), organism = 'hsa')
     gene2path = gene2path[, c(1,2,4)]
     gene2path$PathwayID = gsub(paste0("R-", toupper(organism), "-"), "REACTOME:", gene2path$PathwayID)
     locfname = file.path(system.file("extdata", package = "rMAUPS"),
-                         paste0("reactome.all.entrez.", organism, ".rds"))
+                         paste0("msigdb/reactome.all.entrez.", organism, ".rds"))
     saveRDS(gene2path, locfname)
   }
   #   ## Molecular signature database

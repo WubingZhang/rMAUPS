@@ -89,13 +89,9 @@ DEProtein <- function(pData, design, rData = NULL,
     res$protein.vs.rna.p = p
 
     ## Adjusted VS original results
-    tmp = rownames(dep)[order(dep$adj.stat)]
-    toplabels = c(tmp[c(1:6, length(tmp):(length(tmp)-5))], toplabels)
-    intercept = sd(dep$adj.stat - dep$stat)
     p = ScatterView(dep, "stat", "adj.stat",
                     y_cut = c(-sd(dep$adj.stat), sd(dep$adj.stat)),
-                    groups = c("top", "bottom"), display_cut = FALSE, top = 5,
-                    toplabels = toplabels)
+                    groups = c("top", "bottom"), display_cut = FALSE, top = 5)
     p = p + labs(x = "Proteomic t-statistic", y = "Adjusted proteomic t-statistic")
     res$adj.vs.orig.p = p
 

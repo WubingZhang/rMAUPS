@@ -5,7 +5,7 @@
 \alias{Count2TPM}
 \title{Convert read counts to transcripts per million (TPM)}
 \usage{
-Count2TPM(countMat, idType = "Ensembl", org = "hsa")
+Count2TPM(countMat, idType = "Ensembl", org = "hsa", ensembl = NULL)
 }
 \arguments{
 \item{countMat}{A read count matrix, with geneid as rownames and sample as columns.}
@@ -13,6 +13,8 @@ Count2TPM(countMat, idType = "Ensembl", org = "hsa")
 \item{idType}{Type of gene id.}
 
 \item{org}{Organism, hsa or mmu.}
+
+\item{ensembl}{A two-column data frame, providing the gene ids and the length of transcripts.}
 }
 \value{
 A tpm expression profile.

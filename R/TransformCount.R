@@ -50,6 +50,7 @@ TransformCount <- function(m, method=c("TPM", "voom", "vst", "rlog")[1],
 #' @param countMat A read count matrix, with geneid as rownames and sample as columns.
 #' @param idType Type of gene id.
 #' @param org Organism, hsa or mmu.
+#' @param ensembl A two-column data frame, providing the gene ids and the length of transcripts.
 #'
 #' @return A tpm expression profile.
 #'
@@ -57,32 +58,33 @@ TransformCount <- function(m, method=c("TPM", "voom", "vst", "rlog")[1],
 #' @importFrom biomaRt useMart getBM
 #' @export
 #'
-Count2TPM <- function(countMat, idType = "Ensembl", org="hsa")
+Count2TPM <- function(countMat, idType = "Ensembl", org="hsa", ensembl = NULL)
 {
-  datasets = paste0(c("hsapiens", "mmusculus", "btaurus", "cfamiliaris",
-                      "ptroglodytes", "rnorvegicus", "sscrofa"), "_gene_ensembl")
-  type = c("ensembl_gene_id", "entrezgene_id", "hgnc_symbol", "transcript_length")
-  if(org=="mmu") type[3] = "mgi_symbol"
-  # listEnsemblArchives()
-  # listMarts()
-  # listAttributes()
-  ds = datasets[grepl(org, datasets)]
-  mart <- biomaRt::useMart(host = "www.ensembl.org", biomart = 'ENSEMBL_MART_ENSEMBL', dataset = ds)
-  ensembl = biomaRt::getBM(attributes=type, mart = mart)
-  if(toupper(idType) == "ENSEMBL"){
-    len = aggregate(ensembl$transcript_length, list(ID=ensembl$ensembl_gene_id), median)
-    rownames(len) = len$ID
-    len = len[rownames(countMat),2]; names(len) = rownames(countMat)
-  }else if(toupper(idType) == "SYMBOL"){
-    len = aggregate(ensembl$transcript_length, list(ID=ensembl[,3]), median)
-    rownames(len) = len$ID
-    len = len[rownames(countMat),2]; names(len) = rownames(countMat)
-  }else if(toupper(idType) == "ENTREZ"){
-    len = aggregate(ensembl$transcript_length, list(ID=ensembl[,2]), median)
-    rownames(len) = len$ID
-    len = len[rownames(countMat),2]; names(len) = rownames(countMat)
-  }else
-    stop("Please input right type of gene name, such as Ensembl or gene Symbol ...")
+  if(is.null(ensembl)){
+    datasets = paste0(c("hsapiens", "mmusculus", "btaurus", "cfamiliaris",
+                        "ptroglodytes", "rnorvegicus", "sscrofa"), "_gene_ensembl")
+    type = c("ensembl_gene_id", "entrezgene_id", "hgnc_symbol", "transcript_length")
+    if(org=="mmu") type[3] = "mgi_symbol"
+    # listEnsemblArchives()
+    # listMarts()
+    # listAttributes()
+    ds = datasets[grepl(org, datasets)]
+    mart <- biomaRt::useMart(host = "www.ensembl.org", biomart = 'ENSEMBL_MART_ENSEMBL', dataset = ds)
+    ensembl = biomaRt::getBM(attributes=type, mart = mart)
+    if(toupper(idType) == "ENSEMBL"){
+      ensembl = ensembl[, c(1,4)]
+    }else if(toupper(idType) == "SYMBOL"){
+      ensembl = ensembl[, c(3:4)]
+    }else if(toupper(idType) == "ENTREZ"){
+      ensembl = ensembl[, c(2,4)]
+    }else
+      stop("Please input right type of gene name, such as Ensembl or gene Symbol ...")
+  }
+
+  len = aggregate(ensembl[,2], list(ID=ensembl[,1]), median)
+  rownames(len) = len$ID
+  len = len[rownames(countMat),2]; names(len) = rownames(countMat)
+
 
   na_idx = which(is.na(len))
   if(length(na_idx)>0){
