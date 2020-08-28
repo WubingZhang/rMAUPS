@@ -55,7 +55,7 @@ imputeNA <- function(m, method = "knn", k = 30, rowmax = 0.95, colmax = 0.95){
   }else if(tolower(method) == "replicatebasedresampling"){
     imputed_m = replicateBasedResampling(m)
   }else if(tolower(method) == "lls"){
-    imputed_m = t(pcaMethods::llsImpute(t(m), k = 150))
+    imputed_m = t(pcaMethods::completeObs(pcaMethods::llsImpute(t(m), k = 150), allVariables = TRUE))
   }
   return(imputed_m)
 }
