@@ -15,7 +15,8 @@ be quantified for each row.}
 
 \item{out}{A vector, specifying low-quality values (NA and 0).}
 
-\item{impute}{Imputation method.}
+\item{impute}{A character, specifying the imputation method, one of none, knn, lls,
+lowAbundanceResampling, replicatebasedresampling.}
 }
 \value{
 A matrix with the same columns as input matrix.

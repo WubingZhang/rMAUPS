@@ -117,6 +117,7 @@ simulated[idx] = NA
 qc = ProteomicsQC(simulated, condition = meta[colnames(data), 2], proj.name = "TestQC")
 qc$p1
 qc$p2
+qc$p3
 qc$p4
 qc$p5
 qc$p6
@@ -154,10 +155,9 @@ For proteomics data analysis, the protein complex level analysis is informative.
 ```{r decomplex}
 res = DEComplex(deres)
 head(res$deComplex)
-res$gobp.p
-res$reactome.p
-res$gocc.p
-res$corum.p
+print(res$go.p)
+print(res$corum.p)
+
 ```
 
 # Session info

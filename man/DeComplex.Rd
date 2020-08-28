@@ -7,9 +7,12 @@
 \usage{
 DEComplex(
   depres,
-  type = "GOBP+GOCC+CORUM+REACTOME",
+  type = "GOCC+CORUM",
   lfc = "log2FC",
-  pval = "pvalue"
+  pval = "pvalue",
+  method = "gsea",
+  limit = c(2, 200),
+  ...
 )
 }
 \arguments{
@@ -20,9 +23,15 @@ DEComplex(
 C2_CGP), C3 (C3_MIR, C3_TFT), C4, C6, C7, HALLMARK) and Complex (CORUM). Any combination of them
 are also accessible (e.g. 'GOBP+GOMF+KEGG+REACTOME').}
 
-\item{lfc}{Gene sets.}
+\item{lfc}{A character indicating the column of lfc in the depres.}
 
-\item{pval}{("PC", default), Pearson, ssGSEA or mean (other value). fisher, stouffer.}
+\item{pval}{A character indicating the column of pvalue in the depres.}
+
+\item{method}{One of "gsea" (default), fisher.}
+
+\item{limit}{A two-length vector, specifying the size of genesets for calculation.}
+
+\item{...}{Other available parameters in enrich.GSE.}
 }
 \value{
 A list.

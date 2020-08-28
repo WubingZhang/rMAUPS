@@ -72,8 +72,8 @@ DEProtein <- function(pData, design, rData = NULL,
     mod = stats::lm(dep.stat ~ deg.stat, data = dat)
     dep[genes, "adj.stat"] = mod$residuals
     dep[genes, "adj.pvalue"] = pt(abs(dep[genes, "stat"]),
-                              pfit$df.residual+pfit$df.prior,
-                              lower.tail = FALSE)
+                                  pfit$df.residual+pfit$df.prior,
+                                  lower.tail = FALSE)
     dep[, "adj.padj"] = p.adjust(dep[, "adj.pvalue"])
     res$dep = dep
 

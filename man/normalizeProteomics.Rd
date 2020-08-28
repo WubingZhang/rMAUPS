@@ -10,7 +10,7 @@ normalizeProteomics(df, norm = "median", log2 = FALSE)
 \arguments{
 \item{df}{A matrix-like object.}
 
-\item{norm}{method for normalization, such as none, median, medianratio, scale, robustz, quantile, loess.}
+\item{norm}{method for normalization, such as none, median, medianratio, scale, robustz, quantile, loess, vst.}
 
 \item{log2}{Boolean, whether perform log2 transformation.}
 }

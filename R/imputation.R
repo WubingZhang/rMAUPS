@@ -8,7 +8,8 @@
 #' @param minS A numeric, specifying the minimum proportion/number of values should
 #' be quantified for each row.
 #' @param out A vector, specifying low-quality values (NA and 0).
-#' @param impute Imputation method.
+#' @param impute A character, specifying the imputation method, one of none, knn, lls,
+#' lowAbundanceResampling, replicatebasedresampling.
 #' @return A matrix with the same columns as input matrix.
 #' @author Wubing Zhang
 #' @export
@@ -40,19 +41,21 @@ filterN <- function(m, minS = 3, out = NA, impute = "none"){
 #'
 #' @return A matrix.
 #' @author Wubing Zhang
-#' @import impute
+#' @import impute pcaMethods
 #' @export
 #'
 imputeNA <- function(m, method = "knn", k = 30, rowmax = 0.95, colmax = 0.95){
-  requireNamespace("impute")
+  m = as.matrix(m)
   imputed_m = m
   if(tolower(method) == "knn"){
-    imputed_m = impute.knn(m, k = k, rowmax = rowmax, colmax = colmax,
+    imputed_m = impute::impute.knn(m, k = k, rowmax = rowmax, colmax = colmax,
                            maxp = floor(nrow(m)/1000)*1000)$data
   }else if(tolower(method) == "lowabundanceresampling"){
     imputed_m = lowAbundanceResampling(m)
   }else if(tolower(method) == "replicatebasedresampling"){
     imputed_m = replicateBasedResampling(m)
+  }else if(tolower(method) == "lls"){
+    imputed_m = t(pcaMethods::llsImpute(t(m), k = 150))
   }
   return(imputed_m)
 }

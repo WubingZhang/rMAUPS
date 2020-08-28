@@ -81,7 +81,7 @@ normalizeProteomeDiscoverer <- function(prot, output = NULL,
 #' @rdname normalizeProteomics
 #'
 #' @param df A matrix-like object.
-#' @param norm method for normalization, such as none, median, medianratio, scale, robustz, quantile, loess.
+#' @param norm method for normalization, such as none, median, medianratio, scale, robustz, quantile, loess, vst.
 #' @param log2 Boolean, whether perform log2 transformation.
 #'
 #' @return A matrix.
@@ -89,7 +89,7 @@ normalizeProteomeDiscoverer <- function(prot, output = NULL,
 #' @export
 #'
 normalizeProteomics <- function(df, norm = "median", log2 = FALSE){
-  normdf = df
+  normdf = as.matrix(df)
   if(norm=="medianratio"){
     # Median ratio normalization
     geomeans <- exp(rowMeans(log(normdf)))
@@ -126,6 +126,10 @@ normalizeProteomics <- function(df, norm = "median", log2 = FALSE){
     if(log2) normdf = log2(normdf)
   }else if(norm=="loess"){
     normdf = limma::normalizeCyclicLoess(normdf)
+  }else if(norm=="vst"){
+    normdf = vsn::justvsn(normdf)
+  }else{
+    if(log2) normdf = log2(normdf)
   }
   return(normdf)
 }

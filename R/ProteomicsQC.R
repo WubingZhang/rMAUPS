@@ -1,6 +1,6 @@
 #' Quality control of proteomic data
 #'
-#' @param data A data frame of the proteomics data.
+#' @param dat A data frame of the proteomics data.
 #' @param condition A vector of conditions corresponding to
 #' the samples in the proteomics data.
 #' @param proj.name A character as the prefix of output files.
@@ -11,11 +11,17 @@
 #' @author Wubing Zhang
 #' @export
 #'
-ProteomicsQC <- function(data, condition = NULL, proj.name = NA, outdir = NULL){
+ProteomicsQC <- function(dat,
+                         types = NA,
+                         dat2 = NULL,
+                         condition = NULL,
+                         proj.name = NA,
+                         outdir = NULL){
   ## QCs associated with missing values
   missflag = FALSE
   if(sum(is.na(data))>0){
     missflag = TRUE
+    Detection = getDetection(dat)
     gg = data.frame(gene = rownames(data), NAs = rowSums(is.na(data)))
     p4 = DensityView(gg[,2,drop=FALSE], xlab = "The number of missing value")
     p4 = p4 + theme(legend.position = "none") + labs(title = proj.name)
