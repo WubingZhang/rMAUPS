@@ -35,20 +35,17 @@ filterN <- function(m, minS = 3, out = NA, impute = "none"){
 #'
 #' @param m A matrix-like object.
 #' @param method method for imputation, such as knn, lowAbundanceResampling, ReplicateBasedResampling
-#' @param k Integer, parameter for knn.
-#' @param rowmax parameter for knn.
-#' @param colmax parameter for knn.
 #'
 #' @return A matrix.
 #' @author Wubing Zhang
 #' @import impute pcaMethods
 #' @export
 #'
-imputeNA <- function(m, method = "knn", k = 30, rowmax = 0.95, colmax = 0.95){
+imputeNA <- function(m, method = "knn"){
   m = as.matrix(m)
   imputed_m = m
   if(tolower(method) == "knn"){
-    imputed_m = impute::impute.knn(m, k = k, rowmax = rowmax, colmax = colmax,
+    imputed_m = impute::impute.knn(m, k = 10, rowmax = 0.99, colmax = 0.99,
                            maxp = floor(nrow(m)/1000)*1000)$data
   }else if(tolower(method) == "lowabundanceresampling"){
     imputed_m = lowAbundanceResampling(m)

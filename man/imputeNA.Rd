@@ -5,18 +5,12 @@
 \alias{imputeNA}
 \title{Imputation}
 \usage{
-imputeNA(m, method = "knn", k = 30, rowmax = 0.95, colmax = 0.95)
+imputeNA(m, method = "knn")
 }
 \arguments{
 \item{m}{A matrix-like object.}
 
 \item{method}{method for imputation, such as knn, lowAbundanceResampling, ReplicateBasedResampling}
-
-\item{k}{Integer, parameter for knn.}
-
-\item{rowmax}{parameter for knn.}
-
-\item{colmax}{parameter for knn.}
 }
 \value{
 A matrix.

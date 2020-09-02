@@ -17,9 +17,9 @@ CIBERSORT(
 )
 }
 \arguments{
-\item{response}{A vector of raw read counts of bulk RNA-seq samples. Names correspond to genes.}
+\item{response}{A vector of TPM of bulk RNA-seq samples. Names correspond to genes.}
 
-\item{features}{A matrix of read counts representing the gene expression profiles of all cell types that
+\item{features}{A TPM matrix representing the gene expression profiles of all cell types that
 might contribute to the bulk samples.}
 
 \item{transform}{A function to be applied to columns of exprs following normalization.

@@ -4,14 +4,7 @@
 \alias{ProteomicsQC}
 \title{Quality control of proteomic data}
 \usage{
-ProteomicsQC(
-  dat,
-  types = NA,
-  dat2 = NULL,
-  condition = NULL,
-  proj.name = NA,
-  outdir = NULL
-)
+ProteomicsQC(dat, condition = NULL, proj.name = NA, outdir = NULL)
 }
 \arguments{
 \item{dat}{A data frame of the proteomics data.}

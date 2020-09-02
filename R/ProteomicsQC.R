@@ -12,26 +12,24 @@
 #' @export
 #'
 ProteomicsQC <- function(dat,
-                         types = NA,
-                         dat2 = NULL,
                          condition = NULL,
                          proj.name = NA,
                          outdir = NULL){
   ## QCs associated with missing values
   missflag = FALSE
-  if(sum(is.na(data))>0){
+  if(sum(is.na(dat))>0){
     missflag = TRUE
     Detection = getDetection(dat)
-    gg = data.frame(gene = rownames(data), NAs = rowSums(is.na(data)))
+    gg = data.frame(gene = rownames(dat), NAs = rowSums(is.na(dat)))
     p4 = DensityView(gg[,2,drop=FALSE], xlab = "The number of missing value")
     p4 = p4 + theme(legend.position = "none") + labs(title = proj.name)
-    gg = data.frame(sample = colnames(data), Detection = colSums(!is.na(data)))
+    gg = data.frame(sample = colnames(dat), Detection = colSums(!is.na(dat)))
     p5 = DensityView(gg[,2,drop=FALSE], xlab = "The number of detected gene")
     p5 = p5 + theme(legend.position = "none") + labs(title = proj.name)
     p6 = BarView(gg, "sample", "Detection", fill = "#8da0cb",
                  ylab = "The number of detected gene", main = proj.name)
     p6 = p6 + theme(axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1))
-    p7 = countNA(data) + labs(title = proj.name)
+    p7 = countNA(dat) + labs(title = proj.name)
 
     if(!is.null(outdir)){
       ggsave(paste0(outdir, "/", proj.name, "_density_NA_acrossGene.pdf"), p4, width = 4, height = 3.5)
@@ -43,15 +41,15 @@ ProteomicsQC <- function(dat,
     p4 = p5 = p6 = p7 = NULL
   }
   if(missflag) {
-    data = filterN(data, minS = ncol(data)*0.5)
-    data[is.na(data)] = median(data, na.rm = TRUE)
+    dat = filterN(dat, minS = ncol(dat)*0.5)
+    dat[is.na(dat)] = median(dat, na.rm = TRUE)
   }
   ## Consistency between samples
-  p1 = ViolinView(data, ylab = "Logarithmic abundance", main = proj.name)
+  p1 = ViolinView(dat, ylab = "Logarithmic abundance", main = proj.name)
   p1 = p1 + theme(axis.text.x = element_text(angle = 40, hjust = 1, vjust = 1))
-  p2 = pcView(data, color = condition) + labs(title = proj.name)
+  p2 = pcView(dat, color = condition) + labs(title = proj.name)
   ## Protein correlation within protein complexes
-  p3 = corComplex(data) + labs(title = proj.name)
+  p3 = corComplex(dat) + labs(title = proj.name)
   if(!is.null(outdir)){
     ggsave(paste0(outdir, "/", proj.name, "_violin_abundance.pdf"),
            p1, width = 4, height = 3.5)
