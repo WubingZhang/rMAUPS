@@ -1,0 +1,17 @@
+CHANGES IN VERSION 0.1.0
+-------------------------
+
+    o DEAnalyze: Differential expression analysis.
+    o filterN: Filter out NAs.
+    o getProteinAnn: Retrieve protein annotation from Uniprot database
+    o imputation: Impute NA values using multiple public methods
+    o memeR: API for MEME
+    o normalization: Normalization of proteomic dataset
+    o oldfunctions: Useful functions in daily analysis.
+    o Pratt: API for Pratt.
+    o ssNES: Compute single sample enrichment score.
+
+CHANGES IN VERSION 0.1.1
+-------------------------
+
+    o Init a rMAUPS pipeline and visualization shiny app.

@@ -1,0 +1,82 @@
+---
+title: "rMAUPS: Analysis of Potential for Ubiquitination"
+author:
+- name: Collin Tokheim, Wubing Zhang, Jun Ge, X. Shirley Liu
+  affiliation: Dana-Farber Cancer Institute
+package: "rMAUPS - 0.1.1"
+output:
+  BiocStyle::html_document
+vignette: |
+  %\VignetteIndexEntry{Ubiquitin}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This vignette assumes that you have already properly installed rMAUPS.
+
+# Searching protein sequence
+
+First, load the rMAUPS package.
+
+```{r libs, warning=FALSE}
+library(rMAUPS)
+```
+
+Next, read in protein sequences from uniprot.
+
+```{r listfile}
+uniprot_path <- system.file("extdata", "human_uniprot_seq.txt", package = "rMAUPS")
+uniprot <- read.delim(uniprot_path, sep='\t')
+head(uniprot)
+```
+
+Next, search the protein sequences for lysine residues ("K"). 
+
+```{r search}
+lysine_pos <- searchProtSeq(head(uniprot), 'K')
+head(lysine_pos)
+```
+
+Note, for the sake of a quick example, the above command only searched against the top few protein sequences. Additionally, although not used here, the searchProtSeq function can also handle searching for sequences using regular expression.
+
+# Viewing protein structure
+
+First, we'll view all of the lysine residues for KRAS.
+
+```{r viewProt}
+# get hits for P01116
+id <- 'P01116'
+start <- lysine_pos[lysine_pos['UniprotId']==id, 'start']
+end <- lysine_pos[lysine_pos['UniprotId']==id, 'end']
+
+# view on protein structure
+browseProtStructure(id, start, end)
+```
+
+Next, we'll compare those to the lysines with reported ubiquitination sites.
+
+```{r viewProtUb}
+# Here, we manually create a dataframe for the KRAS ubiqutination sites.
+# In the realisitic scenario, you should load the "Ubiquitination_site_dataset" file
+# from PhosphositePlus DB using the readPSPUbiquitin function. You'll need to download
+# it your self due to copy protection.
+id <- 'P01116'
+ub <- data.frame(gene='KRAS', ID=id, position=c(117, 128, 147))
+
+# get ub sites for P01116
+start <- ub[ub['ID']==id, 'position']
+end <- ub[ub['ID']==id, 'position']
+
+# view on protein structure
+browseProtStructure(id, start, end)
+```
+
+# Session info
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```

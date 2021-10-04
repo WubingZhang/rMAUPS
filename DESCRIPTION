@@ -1,0 +1,21 @@
+Package: rMAUPS
+Type: Package
+Title: Model-Based Analysis of Ubiquitin-Proteome System Based Protein Degradation.
+Version: 0.1.1
+Author: Collin Tokheim, Wubing Zhang, Jun Ge, X. Shirley Liu
+Maintainer: Wubing Zhang <wzhang@ds.dfci.harvard.edu>
+Description: We developed a computational analysis pipeline Model-based Analysis of 
+  the Ubiquitin-Proteasome System using R (rMAUPS), which performs computational analysis 
+  of proteomics data efficiently and effectively. rMAUPS comprises four significant 
+  modules, including quality control (QC), imputation, differential analysis, 
+  and integrative analysis.
+Depends: R (>= 3.5), stats, utils
+Imports: DESeq2, limma, msmsTests, MSnbase, msmsEDA, edgeR, impute, 
+  metap, Biobase, GSVA, matrixStats, ggplot2, ggpubr, msigdbr,
+  ggrepel, data.table, shiny, biomaRt, grDevices, dplyr, httr, purrr, stringr
+Suggests: BiocStyle, knitr, rmarkdown
+License: GPL (>=3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
+VignetteBuilder: knitr

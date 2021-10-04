@@ -1,0 +1,167 @@
+---
+title: "Model-based Analysis of Ubiquitin Proteasome System"
+author:
+- name: Collin Tokheim, Wubing Zhang, Jun Ge, X. Shirley Liu
+  affiliation: Dana-Farber Cancer Institute
+package: "rMAUPS - 0.1.1"
+output:
+  BiocStyle::html_document
+abstract: |
+  Advances in proteomic profiling have enabled the study of protein regulation and degradation in diseases such as cancer. However, there are major computational challenges, such as how to perform quality control (QC) and normalization, how to identify differential protein abundance at multiple-levels of resolution (e.g. protein complexes), and how to integrate data with other omic technologies. Here, we developed a computational analysis pipeline Model-based Analysis of the Ubiquitin-Proteasome System using R (rMAUPS), which performs computational analysis of proteomics data efficiently and effectively. rMAUPS comprises four significant modules, including quality control (QC), imputation, differential analysis, and integrative analysis.
+vignette: |
+  %\VignetteIndexEntry{rMAUPS}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Install required packages
+Installing the package in a fresh environment may take a long time. It may fail because of some issues. You can check the possible issues and solutions from https://github.com/WubingZhang/rMAUPS/issues/3, or post a new issue there.
+
+## Prerequisites
+To install rMAUPS, you have to first install conda following the document (https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html#install-macos-silent).
+
+You should also install r, r-recommended. If you have R installed before, you need to ensure libgfortran, libnetcdf and libxml2 are also installed in your conda environment. Besides, it seems important to have r-data.table and r-rcpparmadillo installed through conda before biocmanager installs dependencies (such as DESeq2).
+
+```{r, eval = FALSE}
+$ conda install -c r r r-markdown r-recommended
+$ conda install -c anaconda libgfortran libnetcdf libxml2
+$ conda install -c conda-forge pandoc r-data.table r-rcpparmadillo
+```
+
+## Installation dependencies and rMAUPS in R
+```{r installr, eval=FALSE}
+install.packages(c("devtools", "BiocManager"), repos = "https://cloud.r-project.org")
+# Install dependencies
+BiocManager::install(c("ggpubr", "metap", "ggrepel", "GSVA", "DESeq2", "limma", "impute", "biomaRt", "msigdbr", "BiocStyle", "msmsTests"))
+# Install rMAUPS from github
+devtools::install_github("WubingZhang/rMAUPS")
+```
+
+## load required packages
+The environment should be OK if you can load the required packages successfully.
+```{r libs, warning=FALSE}
+library(ggplot2)
+library(rMAUPS)
+```
+
+# LC-MS/MS dataset
+The rMAUPS package includes two real LC-MS/MS data files ending with "export_proteins.txt", which are exported from the Proteome Discoverer software. Here, we will take the two datasets as an example to describe how to analyze the data using the rMAUPS pipeline. Before running the pipeline, the data can be preprocessed into a tidy format using the function `normalizeProteomeDiscoverer`. 
+
+* List the two files as follow:
+```{r listfile}
+datapath = system.file("extdata", package = "rMAUPS")
+list.files(datapath, pattern = "export_proteins")
+```
+
+* Preprocess all the datasets in the folder
+```{r preprocess}
+normalizeProteomeDiscoverer(datapath, output = "./", log2 = TRUE)
+```
+
+* Process one dataset
+```{r onedata}
+normdata = normalizeProteomeDiscoverer(file.path(datapath, "experiment1_export_proteins.txt"), log2 = TRUE, return = TRUE)
+head(normdata)
+```
+
+# Quick start
+After preprocessing the datasets, you can run rMAUPS pipeline quickly. The pipeline requires a metadata, which configs the path to the datasets, list of samples and their experimental conditions, and design matrix of the comparisons.
+
+## Metadata configuration
+rMAUPS includes a metadata as an example, you can read the file `metadata.csv` and check the format of the metadata.
+```{r readData}
+metadata = read.csv(file.path(datapath, "metadata.csv"))
+head(metadata)
+```
+
+## Run the pipeline
+After configuring the metadata, it's ready to run the pipeline using one-line command.
+```{r pipeline, eval=FALSE}
+MAUPSr(metadata, outdir = "analysis/")
+## Or
+MAUPSr(system.file("extdata", "metadata.csv", package = "rMAUPS"), outdir = "analysis/")
+```
+
+To better display all the results, we developed a mini shiny app, which includes all the rMAUPS results in a webpage. You can open it by using function `view`.
+```{r visualize, eval=FALSE}
+view(outdir = "analysis/")
+```
+Input the path to rMAUPS results, e.g.  "analysis/" here, click `submit`, then all the figure results will be loaded on the webpage. It take seconds to load all the figures, please be patient after clicking `submit`.
+
+
+# Step-by-step analysis of proteomics
+Besides the quick run of rMAUPS pipeline, you can also perform step-by-step analysis using functions in rMAUPS. You can perform quality control using the function `ProteomicsQC`, normalize the proteomics data using `normalizeProteomics`, impute the missing values using `imputeNA`, perform differetial analysis using `DEAnalyze`, and test the differential abundance of protein complexes or pathways using `DeComplex`.
+
+## Example dataset
+To give an example about the quality control and imputation, we randomly assigned 10% values to be NA in the data.
+```{r simulatedata}
+data = as.matrix(normdata[,-1])
+meta = metadata[metadata$Experiment=="experiment1_normdata.csv", -1]
+rownames(meta) = meta[,1]
+simulated = data
+idx = sample(1:length(simulated), round(0.1*length(simulated)))
+simulated[idx] = NA
+```
+
+## Data quality control
+1. The distribution of protein abundances across samples.
+2. The principal component analysis.
+3. Pairwise correlation of proteins within the same complexes
+4. The number of detected genes / missing values in each sample.
+
+```{r qc}
+qc = ProteomicsQC(simulated, condition = meta[colnames(data), 2], proj.name = "TestQC")
+qc$p1
+qc$p2
+qc$p4
+qc$p5
+qc$p6
+qc$p7
+```
+
+## Data normalization
+rMAUPS provides a function, `normalizeProteomics`, to normalize proteomics data. You can easily normalize the data using multiple optional methods, such as median normalization, median ratio normalization, z-score normalization, quatile normalization and loess normalization.
+```{r normalize}
+normalized = normalizeProteomics(simulated, norm = "median", log2 = FALSE)
+```
+
+## Imputation
+
+### Imputation using KNN
+```{r knn}
+imputed = imputeNA(normalized)
+plot(imputed[idx], data[idx])
+```
+After normalization and imputation, you can perform the quality control analysis again.
+
+## Differential expression analysis
+rMAUPS provides a integrated function `DEAnalyze` to perform differential expression analysis for both RNA-seq data and proteomics data. For RNA-seq data, `type = "RNAseq", method = "DESeq2"` is recommended; for label-free proteomics, `type = "msms", method = "msms.edgeR"` is suggested; for isobaric labeling-based relative quantification of prpteomics, `type = "msms", method = "limma"` is preferred.
+```{r dep}
+deres = DEAnalyze(data, meta[,-1], type = "msms", method = "limma")
+## Visualize the results
+deres$logFDR = log10(deres$padj)
+ScatterView(deres, x = "log2FC", y = "logFDR", 
+            x_cut = c(-0.5,0.5), y_cut = -2, 
+            groups = c("bottomleft", "bottomright"), top = 5)
+```
+
+## Differential expression of pathways/complexes
+For proteomics data analysis, the protein complex level analysis is informative. So we design a function DeComplex to combine the differential abundance of proteins into differential level of protein complexes or biological pathways.
+```{r decomplex}
+res = DeComplex(deres)
+head(res$deComplex)
+res$gobp.p
+res$reactome.p
+res$gocc.p
+res$corum.p
+```
+
+# Session info
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
