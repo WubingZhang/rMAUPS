@@ -1,19 +1,19 @@
-## ----setup, include=FALSE--------------------------------------------------
+## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(echo = TRUE)
 
-## ----libs, warning=FALSE---------------------------------------------------
+## ----libs, warning=FALSE------------------------------------------------------
 library(rMAUPS)
 
-## ----listfile--------------------------------------------------------------
+## ----listfile-----------------------------------------------------------------
 uniprot_path <- system.file("extdata", "human_uniprot_seq.txt", package = "rMAUPS")
 uniprot <- read.delim(uniprot_path, sep='\t')
 head(uniprot)
 
-## ----search----------------------------------------------------------------
+## ----search-------------------------------------------------------------------
 lysine_pos <- searchProtSeq(head(uniprot), 'K')
 head(lysine_pos)
 
-## ----viewProt--------------------------------------------------------------
+## ----viewProt-----------------------------------------------------------------
 # get hits for P01116
 id <- 'P01116'
 start <- lysine_pos[lysine_pos['UniprotId']==id, 'start']
@@ -22,7 +22,7 @@ end <- lysine_pos[lysine_pos['UniprotId']==id, 'end']
 # view on protein structure
 browseProtStructure(id, start, end)
 
-## ----viewProtUb------------------------------------------------------------
+## ----viewProtUb---------------------------------------------------------------
 # Here, we manually create a dataframe for the KRAS ubiqutination sites.
 # In the realisitic scenario, you should load the "Ubiquitination_site_dataset" file
 # from PhosphositePlus DB using the readPSPUbiquitin function. You'll need to download
@@ -37,6 +37,6 @@ end <- ub[ub['ID']==id, 'position']
 # view on protein structure
 browseProtStructure(id, start, end)
 
-## ----sessionInfo, echo=FALSE-----------------------------------------------
+## ----sessionInfo, echo=FALSE--------------------------------------------------
 sessionInfo()
 
