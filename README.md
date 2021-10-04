@@ -6,7 +6,7 @@ Advances in proteomic profiling have enabled the study of protein regulation and
 Installing the package in a new environment may take a long time. If the installation fails, please post a new issue [here](https://github.com/WubingZhang/rMAUPS/issues).
 
 ### Prerequisites
-To install rMAUPS, you have to first install conda following the [document](https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html#install-macos-silent).  The fast way is shown as follows:  
+To install rMAUPS, you have to first install conda following the instruction [here](https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html#install-macos-silent).  The fast way is shown as follows:  
 
 ```
 # Installing conda on macOS
