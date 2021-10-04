@@ -1,7 +1,7 @@
 ---
 title: "Model-based Analysis of Ubiquitin Proteasome System"
 author:
-- name: Collin Tokheim, Wubing Zhang, Jun Ge, X. Shirley Liu
+- name: Wubing Zhang, Collin Tokheim, X. Shirley Liu
   affiliation: Dana-Farber Cancer Institute
 package: "rMAUPS - 0.1.1"
 output:
