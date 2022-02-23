@@ -76,8 +76,9 @@ DEAnalyze <- function(obj, SampleAnn = NULL, type = "Array",
       dds <- DESeq2::DESeq(dds)
       res <- DESeq2::lfcShrink(dds, coef = ncol(design), quiet = TRUE)
       res$padj[is.na(res$padj)] = 1
-      res = res[, c("log2FoldChange", "baseMean", "stat", "pvalue", "padj")]
-      colnames(res) = c("log2FC", "baseMean", "stat", "pvalue", "padj")
+      # res$stat = DESeq2::results(dds)$stat
+      res = res[, c("log2FoldChange", "baseMean", "pvalue", "padj")]
+      colnames(res) = c("log2FC", "baseMean", "pvalue", "padj")
     }else if(tolower(method) == "limma"){
       # Biobase::exprs(obj) = TransformCount(Biobase::exprs(obj), method = "voom")
       # limma:voom
